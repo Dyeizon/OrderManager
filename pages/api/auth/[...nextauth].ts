@@ -1,8 +1,16 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import jwt from 'jsonwebtoken';
 import dbConnect from "@/app/lib/dbConnect";
 import User from "@/app/models/User";
+
+interface JWTToken {
+  privilegeLevel: string;
+  id: string,
+  username: string,
+  [key: string]: any;
+}
 
 export default NextAuth({
   providers: [
@@ -20,16 +28,12 @@ export default NextAuth({
         const user = await verifyUser(credentials.username, credentials.password);
         
         if (user) {
-          return {id: String(user.id), username: user.username}
+          return {id: String(user.id), username: user.username, name: user.username, privilegeLevel: user.privilegeLevel}
         }
         else throw new Error('Falha na autenticação')
       }
     })
   ],
-
-  pages: {
-    signIn: '@/login/',
-  },
 
   session: {
     strategy: 'jwt',
@@ -37,6 +41,32 @@ export default NextAuth({
 
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
+    encode: async ({ secret, token }) => {
+      const typedToken = token as JWTToken;
+      return jwt.sign(typedToken, secret);
+    },
+    
+    decode: async ({ secret, token }) => {
+      if(!token) throw new Error('JWT Token is not defined');
+      const decoded = jwt.verify(token, secret);
+      return decoded as JWTToken;
+    }
+  },
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        (token as JWTToken).privilegeLevel = user.privilegeLevel;
+        (token as JWTToken).id = user.id;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      session.privilegeLevel = (token as JWTToken).privilegeLevel;
+      session.username = (token as JWTToken).username;
+      return session;
+    }
   }
 })
 

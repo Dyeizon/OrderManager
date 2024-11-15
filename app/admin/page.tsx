@@ -10,10 +10,10 @@ export default function Admin() {
       <div>nao ta logado amigo {status}</div>
     )
   } else {
+    console.log(session);
     return (
       <div>
         <h1>Página Administrativa - {session?.user?.name} - {status}</h1>
-        
       </div>
     );
   }
