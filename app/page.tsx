@@ -1,7 +1,12 @@
+"use client"
+
+import { SessionProvider } from "next-auth/react";
+import Login from "./login/page";
+
 export default function Home() {
   return (
-    <div>
-      <h1>hello world</h1>
-    </div>
+    <SessionProvider>
+      <Login/>
+    </SessionProvider>
   );
 }
