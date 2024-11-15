@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.10.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
     "next": "15.0.2",
     "next-auth": "^4.24.10",
@@ -20,6 +22,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
