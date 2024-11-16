@@ -53,7 +53,7 @@ const SignIn = () => {
           <TextInput style={{borderColor: '#AAA'}} id="password" type="password" required value={password} onChange={(e) => setPassword(e.currentTarget.value)}/>
         </div>
       <p className='min-h-6 text-red-600'>{error}</p>
-      <Button type="submit" disabled={status == 'loading'}>Entrar {session?.user?.name}</Button>
+      <Button type="submit" disabled={status == 'loading'}>Entrar</Button>
     </form>
     </div>
   );

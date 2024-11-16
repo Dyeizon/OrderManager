@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface Items extends mongoose.Document {
   name: string;
-  description: string;
+  category: string;
   price: number;
 }
 
@@ -12,10 +12,10 @@ const ItemSchema = new mongoose.Schema<Items>({
     required: [true, "Please provide a name for the item."],
     maxlength: [60, "Name cannot be more than 60 characters"],
   },
-  description: {
+  category: {
     type: String,
-    required: [true, "Please provide a description for the item."],
-    maxlength: [200, "Description cannot be more than 200 characters"],
+    required: [true, "Please provide a category for the item."],
+    maxlength: [60, "Category cannot be more than 200 characters"],
   },
   price: {
     type: Number,

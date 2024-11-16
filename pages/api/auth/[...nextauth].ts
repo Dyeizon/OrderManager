@@ -28,7 +28,11 @@ export default NextAuth({
         const user = await verifyUser(credentials.username, credentials.password);
         
         if (user) {
-          return {id: String(user.id), username: user.username, name: user.username, privilegeLevel: user.privilegeLevel}
+          return {
+            id: user.id, 
+            username: user.username,
+            privilegeLevel: user.privilegeLevel,
+          }
         }
         else throw new Error('Falha na autenticação')
       }
@@ -37,6 +41,11 @@ export default NextAuth({
 
   session: {
     strategy: 'jwt',
+  },
+
+  pages: {
+    signIn: '/',
+    signOut: '/',
   },
 
   jwt: {
@@ -58,6 +67,7 @@ export default NextAuth({
       if (user) {
         (token as JWTToken).privilegeLevel = user.privilegeLevel;
         (token as JWTToken).id = user.id;
+        (token as JWTToken).username = user.username;
       }
       return token;
     },
@@ -80,7 +90,11 @@ async function verifyUser(username: string, password: string) {
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) throw new Error('Credenciais inválidas');
   
-    return { id: user._id, username: user.username, privilegeLevel: user.privilegeLevel };
+    return { 
+      id: user._id, 
+      username: user.username, 
+      privilegeLevel: user.privilegeLevel 
+    };
     
   } catch (error) {
     throw new Error('Falha na autenticação');
