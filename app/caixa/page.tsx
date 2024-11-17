@@ -19,6 +19,7 @@ export default function Caixa() {
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [cart, setCart] = useState<{ [key: string] : {item: Items, quantity: number } }>({});
+  const [cartSum, setCartSum] = useState(0);
 
   useEffect(() => {
     if(session) {
@@ -79,6 +80,7 @@ export default function Caixa() {
         }
       }
       console.log(newCart)
+      setCartSum(cartSum + quantity * newCart[itemId].item.price);
 
       if(searchText) handleType("");
       return newCart;
@@ -88,6 +90,7 @@ export default function Caixa() {
   const removeFromCart = (itemId: string) => {
     setCart((prevCart) => {
       const updatedCart = { ...prevCart };
+      setCartSum(cartSum - updatedCart[itemId].quantity * updatedCart[itemId].item.price);
       delete updatedCart[itemId];
       return updatedCart;
     });
@@ -109,7 +112,7 @@ export default function Caixa() {
       {error && <h1>{error}</h1>}
 
       
-      <div className="w-full flex my-4 justify-between">
+      <div className="w-full flex my-4">
 
         <div className="w-1/2 flex space-x-4 items-center justify-center">
           <svg fill="#000000" height="24px" width="24px" version="1.1" id="search_icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
@@ -122,10 +125,6 @@ export default function Caixa() {
           </svg>
 
           <TextInput className="w-9/12" style={{borderColor: '#AAA'}} type="text" value={searchText} onChange={(e) => handleType(e.currentTarget.value)}/>
-        </div>
-
-        <div>
-          <Button onClick={() => confirmCart()} className="bg-green-500 text-white px-24">Finalizar pedido</Button>
         </div>
       </div>
 
@@ -145,13 +144,13 @@ export default function Caixa() {
               <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
                 <Table.Cell>
                 {item.image ? (
-                  <img src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-24 h-24 object-cover rounded-md m-auto" />
+                  <img src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
                 ) : (
                   <></>
                 )}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium">{item.name}</Table.Cell>
-                <Table.Cell>R${item.price}</Table.Cell>
+                <Table.Cell>R${item.price.toFixed(2)}</Table.Cell>
                 <Table.Cell>
                   <div className="flex space-y-2 flex-col items-center">
                     <div className="flex space-x-2 items-center">
@@ -176,15 +175,17 @@ export default function Caixa() {
             <Table.Head>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Item</Table.HeadCell>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
-              <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Remover</Table.HeadCell>
+              <Table.HeadCell className="flex justify-end items-center space-x-4" style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>
+                  <span className="text-xl text-green-300">R${cartSum.toFixed(2)}</span>
+                <Button onClick={() => confirmCart()} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
+              </Table.HeadCell>
             </Table.Head>
 
             <Table.Body className="divide-y">
-
               {
                 Object.keys(cart).length === 0 ? (
                   <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
-                    <Table.Cell className="whitespace-nowrap font-medium">O carrinho está vazio.</Table.Cell>
+                    <Table.Cell className="whitespace-nowrap font-medium">O pedido está vazio.</Table.Cell>
                   </Table.Row>
                 ) : (
                   Object.entries(cart).map(([itemId, cartItem]) => (

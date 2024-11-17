@@ -108,7 +108,7 @@ export default function Admin() {
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-medium">{item.name}</Table.Cell>
               <Table.Cell>{item.category}</Table.Cell>
-              <Table.Cell>R${item.price}</Table.Cell>
+              <Table.Cell>R${item.price.toFixed(2)}</Table.Cell>
               <Table.Cell className="flex justify-center items-center h-full">
                 <div className="flex space-x-6">
                   <button onClick={() => handleDelete(String(item._id))} className="bg-red-200 px-4 py-1 rounded-md font-medium text-red-600 hover:underline dark:text-cyan-500">
