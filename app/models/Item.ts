@@ -4,6 +4,8 @@ export interface Items extends mongoose.Document {
   name: string;
   category: string;
   price: number;
+  image: Buffer;
+  imageType: string;
 }
 
 const ItemSchema = new mongoose.Schema<Items>({
@@ -20,7 +22,15 @@ const ItemSchema = new mongoose.Schema<Items>({
   price: {
     type: Number,
     required: [true, "Please provide a price for the item."]
-  }
+  },
+  image: {
+    type: Buffer,
+    required: true
+  },
+  imageType: {
+    type: String,
+    required: true
+  },
 });
 
 export default mongoose.models.Item || mongoose.model<Items>("Item", ItemSchema);

@@ -1,71 +1,75 @@
 
 "use client";
 
-import { Button, Label, TextInput, Select } from "flowbite-react";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { Button, Label, TextInput, Select, FileInput } from "flowbite-react";
+import {  useState, useRef } from "react";
 
-export function ItemForm() {
-    const [name, setName] = useState('');
-    const [category, setCategory] = useState('');
-    const [price, setPrice] = useState('');
-    const {data: session, status} = useSession();
+export interface ItemFormData {
+    name: string,
+    category: string,
+    price: number,
+    image: File | null,
+}
 
-    useEffect(()=>{
-        if(session) {
-            fetchData();
+interface ItemFormProps {
+    onSub: (formData: ItemFormData) => void;
+  }
+
+export function ItemForm({onSub}: ItemFormProps) {
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [formData, setFormData] = useState<ItemFormData>({
+        name: '',
+        category: 'Lanche',
+        price: 0,
+        image: null,
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: name === "price" ? parseFloat(value) || 0 : value,
+        }));
+      };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setFormData((prevData) => ({
+            ...prevData,
+            image: file,
+            }));
         }
-    }, [status])
+    };
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch("/api/items", {method: "GET"});
-            const data = await response.json();
-            if (response.status === 200) {
-                console.log(data.data)
-            } else {
-                console.log(data.error);
-            }
-        } catch (error: any) {
-
-        }   
-    }
-
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        try {
-            console.log('session before post', session)
-            const response = await fetch(`/api/items`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${session}`, // Add token to headers
-                },
-                credentials: "include",
-                body: JSON.stringify({session, name: name, category: category, price: price}),
-            });
-
-            console.log(response);
-        
-            if (!response.ok) throw new Error("Failed to create item");
-        } catch (error) {
-            console.error("Error creating item:", error);
-        }
-    }
+        onSub(formData);
+        setFormData({
+            name: '',
+            category: 'Lanche',
+            price: 0,
+            image: null,
+        })
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+    };
 
     return (
-        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-wrap gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-4">
         <div className="flex-1">
             <div className="mb-2">
             <Label htmlFor="name" value='Nome do item' />
             </div>
-            <TextInput id="name" type="text" value={name} onChange={(e) => setName(e.currentTarget.value)} required shadow />
+            <TextInput id="name" name="name" type="text" value={formData.name} onChange={handleChange} required shadow />
         </div>
         <div className="flex-1">
             <div className="mb-2">
                 <Label htmlFor="categories" value="Categoria" />
             </div>
-            <Select id="categories" value={category} onChange={(e) => setCategory(e.currentTarget.value)} required>
+            <Select id="categories" name="category" value={formData.category} onChange={handleChange} required>
                 <option>Lanche</option>
                 <option>Bebida</option>
                 <option>Doce</option>
@@ -75,7 +79,14 @@ export function ItemForm() {
             <div className="mb-2">
             <Label htmlFor="price" value="Preço" />
             </div>
-            <TextInput id="price" type="number" step={0.010} value={price} onChange={(e) => setPrice(e.currentTarget.value)} required shadow />
+            <TextInput id="price" type="number" name="price" step={0.010} value={formData.price} onChange={handleChange} required shadow />
+        </div>
+
+        <div>
+            <div className="mb-2">
+                <Label htmlFor="image" value="Imagem"/>
+            </div>
+            <FileInput id="image" ref={fileInputRef} name="image" onChange={handleFileChange} required accept="image/*" />
         </div>
         <Button color="success" type="submit" className="self-end">Cadastrar item</Button>
         </form>

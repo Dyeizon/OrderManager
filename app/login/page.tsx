@@ -16,7 +16,21 @@ const SignIn = () => {
 
   useEffect(() => {
     if(session) {
-      router.push('/admin');
+      console.log(session)
+      switch(parseInt(session.privilegeLevel)) {
+        case 3:
+          router.push('/admin');
+          break;
+        case 2:
+          router.push('/caixa');
+          break;
+        case 1:
+          router.push('/cozinha');
+          break;
+        default:
+          router.push('/telao');
+          break;
+      }
     }
   }, [status])
 
