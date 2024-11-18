@@ -1,11 +1,12 @@
 "use client"
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Items } from "../models/Item";
 import { Table, TextInput, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
-
+import OrderPrint from "../components/OrderPrint";
+import { OrderData } from "../components/OrderPrint";
 
 export default function Caixa() {
   const {data: session, status} = useSession();
@@ -20,6 +21,8 @@ export default function Caixa() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [cart, setCart] = useState<{ [key: string] : {item: Items, quantity: number } }>({});
   const [cartSum, setCartSum] = useState(0);
+  const [orderData, setOrderData] = useState<OrderData>();
+  const [isCartClosed, setIsCartClosed] = useState<Boolean>(false);
 
   useEffect(() => {
     if(session) {
@@ -79,7 +82,6 @@ export default function Caixa() {
           newCart[itemId] = {item, quantity};
         }
       }
-      console.log(newCart)
       setCartSum(cartSum + quantity * newCart[itemId].item.price);
 
       if(searchText) handleType("");
@@ -102,18 +104,35 @@ export default function Caixa() {
     });
   }
 
-  const confirmCart = () => {
-    console.log(cart);
-  }
+  const transformedCart = Object.entries(cart).reduce((acc: any, [key, value]) => {
+    acc[key] = {
+      item: {
+        _id: value.item._id,
+        name: value.item.name,
+        price: value.item.price,
+      },
+      quantity: value.quantity,
+    };
+    return acc;
+  }, {});
 
+  const confirmCart = () => {
+    setOrderData({
+      code: 100,
+      total: cartSum,
+      cart: transformedCart,
+    });
+
+    setIsCartClosed(true);
+  }
 
   return (
     <div>
       {error && <h1>{error}</h1>}
-
+      
+      <OrderPrint orderData={orderData}></OrderPrint>
       
       <div className="w-full flex my-4">
-
         <div className="w-1/2 flex space-x-4 items-center justify-center">
           <svg fill="#000000" height="24px" width="24px" version="1.1" id="search_icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
               viewBox="0 0 490.4 490.4" xmlSpace="preserve">
@@ -177,7 +196,7 @@ export default function Caixa() {
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
               <Table.HeadCell className="flex justify-end items-center space-x-4" style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>
                   <span className="text-xl text-green-300">R${cartSum.toFixed(2)}</span>
-                <Button onClick={() => confirmCart()} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
+                <Button onClick={() => {confirmCart()}} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
               </Table.HeadCell>
             </Table.Head>
 
