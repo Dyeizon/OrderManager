@@ -6,7 +6,7 @@ import { Items } from "../models/Item";
 import { Table } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { ItemForm } from "../components/ItemForm";
-import { ItemFormData } from "../components/ItemForm";
+import { ItemFormData } from "../types";
 import Image from "next/image";
 
 export default function Admin() {
@@ -108,7 +108,7 @@ export default function Admin() {
             <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell>
               {item.image ? (
-                <Image src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-24 h-24 object-cover rounded-md m-auto" />
+                <Image src={`data:image/png;base64,${item.image}`} width={1} height={1} alt={item.name} className="w-24 h-24 object-cover rounded-md m-auto" />
               ) : (
                 <></>
               )}

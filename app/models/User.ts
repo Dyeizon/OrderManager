@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import mongoose, { CallbackError } from "mongoose";
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 export interface Users extends mongoose.Document {
   username: string;
@@ -33,8 +33,8 @@ UserSchema.pre('save', async function(next) {
     if(!this.isModified('password')) return next;
 
     try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
+        const salt = await bcryptjs.genSalt(10);
+        this.password = await bcryptjs.hash(this.password, salt);
         next();
         // eslint-disable-next-line
     } catch (error: CallbackError | any) {
@@ -43,7 +43,7 @@ UserSchema.pre('save', async function(next) {
 })
 
 UserSchema.methods.comparePassword = async function(candidatePassword: string) {
-    return await bcrypt.compare(candidatePassword, this.password);
+    return await bcryptjs.compare(candidatePassword, this.password);
 }
 
 export default mongoose.models.User || mongoose.model<Users>("User", UserSchema);

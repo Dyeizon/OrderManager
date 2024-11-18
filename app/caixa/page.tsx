@@ -6,7 +6,7 @@ import { Items } from "../models/Item";
 import { Table, TextInput, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import OrderPrint from "../components/OrderPrint";
-import { OrderData } from "../components/OrderPrint";
+import { Cart, OrderData } from "../types";
 import Image from "next/image";
 
 export default function Caixa() {
@@ -20,7 +20,7 @@ export default function Caixa() {
   const router = useRouter();
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
-  const [cart, setCart] = useState<{ [key: string] : {item: Items, quantity: number } }>({});
+  const [cart, setCart] = useState<Cart>({});
   const [cartSum, setCartSum] = useState(0);
   const [orderData, setOrderData] = useState<OrderData>();
 
@@ -53,6 +53,40 @@ export default function Caixa() {
       }
     }
   };
+
+  const handleOrderPost = async () => {
+    const newOrderData = {
+      code: 100,
+      status: 1,
+      total: cartSum,
+      cart: transformedCart,
+    };
+
+    if (!newOrderData.cart || newOrderData.cart.length === 0) {
+      setError("Cart is empty!");
+      return;
+    }
+  
+    setOrderData(newOrderData);
+
+    console.log(newOrderData);
+    if(!newOrderData) throw new Error("No data.");
+
+    try {
+        const response = await fetch(`/api/orders`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newOrderData),
+        });
+    
+        if (!response.ok) throw new Error("Failed to create order");
+    } catch (error) {
+        console.error("Error creating order:", error);
+    }
+  }
 
   const handleType = (text: string) => {
     setSearchText(text);
@@ -122,13 +156,6 @@ export default function Caixa() {
     return acc;
   }, {});
 
-  const confirmCart = () => {
-    setOrderData({
-      code: 100,
-      total: cartSum,
-      cart: transformedCart,
-    });
-  }
 
   return (
     <div>
@@ -167,7 +194,7 @@ export default function Caixa() {
               <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
                 <Table.Cell>
                 {item.image ? (
-                  <Image src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
+                  <Image src={`data:image/png;base64,${item.image}`} width={1} height={1} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
                 ) : (
                   <></>
                 )}
@@ -200,7 +227,7 @@ export default function Caixa() {
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
               <Table.HeadCell className="flex justify-end items-center space-x-4" style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>
                   <span className="text-xl text-green-300">R${cartSum.toFixed(2)}</span>
-                <Button onClick={() => {confirmCart()}} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
+                <Button onClick={() => {handleOrderPost()}} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
               </Table.HeadCell>
             </Table.Head>
 

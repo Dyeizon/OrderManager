@@ -12,7 +12,7 @@ export function Header() {
   return (
     <Navbar fluid rounded className="w-11/12 m-auto">
       <Navbar.Brand href="#">
-        <Image src="/favicon.ico" className="mr-3 h-6 sm:h-9" alt="OrderManager Logo" />
+        <Image src="/favicon.ico" width={32} height={32} className="w-8 h-8 mr-3 sm:h-9" alt="OrderManager Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">OrderManager</span>
       </Navbar.Brand>
       <div className="flex md:order-2 items-center space-x-6">

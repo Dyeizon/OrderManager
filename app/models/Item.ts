@@ -8,7 +8,7 @@ export interface Items extends mongoose.Document {
   imageType: string;
 }
 
-const ItemSchema = new mongoose.Schema<Items>({
+export const ItemSchema = new mongoose.Schema<Items>({
   name: {
     type: String,
     required: [true, "Please provide a name for the item."],

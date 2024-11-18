@@ -1,23 +1,10 @@
 import { useEffect, useRef } from "react";
-import { Items } from "../models/Item";
 import { useReactToPrint } from "react-to-print";
-
-export interface OrderData {
-    code: number;
-    total: number;
-    cart: {
-      [key: string]: {
-        item: Items;
-        quantity: number;
-      };
-    };
-}
+import { OrderData } from "../types";
 
 interface OrderPrintProps {
     orderData: OrderData | undefined; 
 }
-
-
 
 export default function OrderPrint({orderData}: OrderPrintProps) {
     const printRef = useRef<HTMLDivElement>(null);

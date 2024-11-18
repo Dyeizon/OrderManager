@@ -1,26 +1,55 @@
 import mongoose from "mongoose";
-import { Items } from "./Item";
+import { OrderData } from "../types";
+import { CartItem } from "../types";
+import { ItemSchema } from "./Item";
+interface IOrderDataModel extends OrderData, mongoose.Document {}
 
-export interface Orders extends mongoose.Document {
-    code: number;
-    total: number;
-    cart: { 
-        [key: string] : {item: Items, quantity: number };
-    }
-}
-
-const OrderSchema = new mongoose.Schema<Orders>({
-  code: {
-    type: Number,
-    required: [true, "Please provide a number for the order."],
+export const MinimizedItemSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Please provide a name for the item."],
+    maxlength: [60, "Name cannot be more than 60 characters"],
   },
-  total: {
+  price: {
     type: Number,
-    required: [true, "Please provide a total for the order"],
-  },
-  cart: {
-    required: [true, "Please provide the cart info for the order"],
+    required: [true, "Please provide a price for the item."]
   }
 });
 
-export default mongoose.models.Order || mongoose.model<Orders>("Order", OrderSchema);
+const CartItemSchema = new mongoose.Schema<CartItem>({
+  item: {
+    type: MinimizedItemSchema,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
+
+const OrderSchema = new mongoose.Schema<IOrderDataModel>(
+  {
+    code: {
+      type: Number,
+      required: [true, "Please provide a numeric code for the order."],
+    },
+    status: {
+      type: Number,
+      required: [true, "Please provide a number for the status (1 - To pay; 2 - Payed; 3 - To produce; 4 - Done; 5 - Closed)"],
+      default: 1,
+      enum: [1, 2, 3, 4, 5],
+    },
+    total: {
+      type: Number,
+      required: [true, "Please provide a total for the order"],
+    },
+    cart: {
+      type: Map,
+      of: CartItemSchema, // Use a schema for each `CartItem`
+      required: [true, "Please provide the cart info for the order"],
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.models.Order || mongoose.model<IOrderDataModel>("Order", OrderSchema);

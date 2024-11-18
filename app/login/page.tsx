@@ -55,7 +55,7 @@ const SignIn = () => {
   return (
     <div className='w-full h-screen flex items-center justify-center' style={{backgroundColor: 'var(--theme-color)'}}>
       <form onSubmit={handleSubmit} className="flex max-w-md w-4/5 flex-col gap-4 h-min bg-slate-100 p-10 rounded-lg">
-        <Image src="/favicon.svg" className="w-20 m-auto" alt="OrderManager Logo"/>
+        <Image src="/favicon.svg" width={5} height={5} className="w-20 m-auto" alt="OrderManager Logo"/>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username" value="Usuário" />

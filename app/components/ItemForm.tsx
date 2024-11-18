@@ -3,13 +3,7 @@
 
 import { Button, Label, TextInput, Select, FileInput } from "flowbite-react";
 import {  useState, useRef } from "react";
-
-export interface ItemFormData {
-    name: string,
-    category: string,
-    price: number,
-    image: File | null,
-}
+import { ItemFormData } from "../types";
 
 interface ItemFormProps {
     onSub: (formData: ItemFormData) => void;
