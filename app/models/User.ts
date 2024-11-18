@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import mongoose, { CallbackError } from "mongoose";
 import bcrypt from 'bcrypt';
 
@@ -35,6 +36,7 @@ UserSchema.pre('save', async function(next) {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
         next();
+        // eslint-disable-next-line
     } catch (error: CallbackError | any) {
         next(error);
     }

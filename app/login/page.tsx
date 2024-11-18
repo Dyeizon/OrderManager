@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Label, TextInput, Button } from 'flowbite-react';
+import Image from 'next/image';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ const SignIn = () => {
   const router = useRouter();
 
   const {data: session, status} = useSession();
-
+  // eslint-disable-next-line
   useEffect(() => {
     if(session) {
       console.log(session)
@@ -32,9 +33,10 @@ const SignIn = () => {
           break;
       }
     }
+    // eslint-disable-next-line
   }, [status])
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const res = await signIn('credentials', {
@@ -53,7 +55,7 @@ const SignIn = () => {
   return (
     <div className='w-full h-screen flex items-center justify-center' style={{backgroundColor: 'var(--theme-color)'}}>
       <form onSubmit={handleSubmit} className="flex max-w-md w-4/5 flex-col gap-4 h-min bg-slate-100 p-10 rounded-lg">
-        <img src="/favicon.svg" className="w-20 m-auto" alt="OrderManager Logo"/>
+        <Image src="/favicon.svg" className="w-20 m-auto" alt="OrderManager Logo"/>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username" value="Usuário" />

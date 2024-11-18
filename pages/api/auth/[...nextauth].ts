@@ -9,6 +9,7 @@ interface JWTToken {
   privilegeLevel: string;
   id: string,
   username: string,
+  // eslint-disable-next-line
   [key: string]: any;
 }
 
@@ -97,7 +98,7 @@ async function verifyUser(username: string, password: string) {
     };
     
   } catch (error) {
-    throw new Error('Falha na autenticação');
+    throw new Error(`Falha na autenticação ${error}`);
   }
 
 }

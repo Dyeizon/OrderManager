@@ -1,4 +1,7 @@
+// eslint-disable-next-line
 import NextAuth from "next-auth";
+
+// eslint-disable-next-line
 import { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {

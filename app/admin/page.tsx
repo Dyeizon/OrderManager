@@ -7,13 +7,15 @@ import { Table } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { ItemForm } from "../components/ItemForm";
 import { ItemFormData } from "../components/ItemForm";
+import Image from "next/image";
 
 export default function Admin() {
   const {data: session, status} = useSession();
   const [items, setItems] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const router = useRouter();
 
+  // eslint-disable-next-line
   useEffect(() => {
     if(session) {
       fetchItems();
@@ -22,6 +24,7 @@ export default function Admin() {
         router.push('/')
       }
     }
+    // eslint-disable-next-line
   }, [session])
 
   const fetchItems = async () => {
@@ -34,8 +37,12 @@ export default function Admin() {
       } else {
         console.log(data.error);
       }
-    } catch (error: any) {
-      setError(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        console.error("An unexpected error occured.", error);
+      }
     }
   };
 
@@ -101,7 +108,7 @@ export default function Admin() {
             <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell>
               {item.image ? (
-                <img src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-24 h-24 object-cover rounded-md m-auto" />
+                <Image src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-24 h-24 object-cover rounded-md m-auto" />
               ) : (
                 <></>
               )}

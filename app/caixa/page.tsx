@@ -1,12 +1,13 @@
 "use client"
 
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Items } from "../models/Item";
 import { Table, TextInput, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import OrderPrint from "../components/OrderPrint";
 import { OrderData } from "../components/OrderPrint";
+import Image from "next/image";
 
 export default function Caixa() {
   const {data: session, status} = useSession();
@@ -15,14 +16,13 @@ export default function Caixa() {
   const [filteredItems, setFilteredItems] = useState<Items[]>([]);
   const [searchText, setSearchText] = useState<string>("");
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [cart, setCart] = useState<{ [key: string] : {item: Items, quantity: number } }>({});
   const [cartSum, setCartSum] = useState(0);
   const [orderData, setOrderData] = useState<OrderData>();
-  const [isCartClosed, setIsCartClosed] = useState<Boolean>(false);
 
   useEffect(() => {
     if(session) {
@@ -32,6 +32,7 @@ export default function Caixa() {
         router.push('/')
       }
     }
+  // eslint-disable-next-line
   }, [session])
 
   const fetchItems = async () => {
@@ -44,8 +45,12 @@ export default function Caixa() {
       } else {
         console.log(data.error);
       }
-    } catch (error: any) {
-      setError(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        console.error("An unexpected error occured.", error);
+      }
     }
   };
 
@@ -104,6 +109,7 @@ export default function Caixa() {
     });
   }
 
+  // eslint-disable-next-line
   const transformedCart = Object.entries(cart).reduce((acc: any, [key, value]) => {
     acc[key] = {
       item: {
@@ -122,8 +128,6 @@ export default function Caixa() {
       total: cartSum,
       cart: transformedCart,
     });
-
-    setIsCartClosed(true);
   }
 
   return (
@@ -163,7 +167,7 @@ export default function Caixa() {
               <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
                 <Table.Cell>
                 {item.image ? (
-                  <img src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
+                  <Image src={`data:image/png;base64,${item.image}`} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
                 ) : (
                   <></>
                 )}

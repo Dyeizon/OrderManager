@@ -23,8 +23,10 @@ export default function OrderPrint({orderData}: OrderPrintProps) {
     const printRef = useRef<HTMLDivElement>(null);
     const reactToPrintFn = useReactToPrint({contentRef: printRef});
 
+    // eslint-disable-next-line
     useEffect(() => {
         if(orderData) reactToPrintFn();
+    // eslint-disable-next-line
     }, [orderData])
 
     return (
