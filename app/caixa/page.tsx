@@ -45,7 +45,7 @@ export default function Caixa() {
         setItems(data.data);
         setFilteredItems(data.data);
       } else {
-        console.log(data.error);
+        console.error(data.error);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -88,8 +88,7 @@ export default function Caixa() {
     }
   
     setOrderData(newOrderData);
-
-    console.log(newOrderData);
+    
     if(!newOrderData) throw new Error("No data.");
 
     try {

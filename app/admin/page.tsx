@@ -33,9 +33,8 @@ export default function Admin() {
       const data = await response.json();
       if (response.status === 200) {
         setItems(data.data);
-        console.log(data.data)
       } else {
-        console.log(data.error);
+        console.error(data.error);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -61,8 +60,6 @@ export default function Admin() {
   }
 
   const handlePost = async (data: ItemFormData) => {
-    console.log(data);
-
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("name", data.name);

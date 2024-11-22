@@ -37,9 +37,8 @@ export default function Pedidos() {
 
       if (response.status === 200) {
         setOrders(ordersWithDates);
-        console.log(data.data)
       } else {
-        console.log(data.error);
+        console.error(data.error);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {

@@ -17,7 +17,6 @@ const SignIn = () => {
   // eslint-disable-next-line
   useEffect(() => {
     if(session) {
-      console.log(session)
       switch(parseInt(session.privilegeLevel)) {
         case 3:
           router.push('/admin');

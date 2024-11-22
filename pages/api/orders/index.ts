@@ -40,12 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				const status = Array.isArray(fields.status) ? parseFloat(fields.status[0]) : parseFloat(fields.status || '0');
 				const total = Array.isArray(fields.total) ? parseFloat(fields.total[0]) : parseFloat(fields.total || '0');
 				const cart = Array.isArray(fields.cart) ? fields.cart[0] : fields.cart;
-				
-				console.log(fields);
-				console.log(code)
-				console.log(status)
-				console.log(total)
-				console.log(cart)
 
 				const newOrder = await Order.create({
 					code,
