@@ -29,7 +29,7 @@ export default function Pedidos() {
       const response = await fetch("/api/orders");
       const data = await response.json();
 
-      const ordersWithDates = data.data.map((order: any) => ({
+      const ordersWithDates = data.data.map((order: IOrderDataModel) => ({
         ...order,
         createdAt: new Date(order.createdAt),
         updatedAt: new Date(order.updatedAt),
