@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(401).json({ error: "Unauthorized request"});
 		}
 		try {
-			const orders = await Order.find({}).select("-__v");
+			const orders = await Order.find({}).select("-__v").sort({code: -1});
 			
 			res.status(200).json({ data: orders });
 		} catch (error) {
@@ -30,14 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		break;
 		
 		case "POST":
-		// if(!s) {
-		// 	return res.status(401).json({ error: "Unauthorized request"});
-		// }
-		
-		// if (parseInt(s.privilegeLevel) < 3) {
-		// 	return res.status(403).json({ error: "Insufficient privilege level" });
-		// }
-		
 		try {
 			const form = new IncomingForm();
 

@@ -20,6 +20,7 @@ export default function Caixa() {
   const router = useRouter();
 
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [sequence, setSequence] = useState<number | null>(null);
   const [cart, setCart] = useState<Cart>({});
   const [cartSum, setCartSum] = useState(0);
   const [orderData, setOrderData] = useState<OrderData>();
@@ -54,9 +55,25 @@ export default function Caixa() {
     }
   };
 
+  const getNextCounter = async (): Promise<number> => {
+    try {
+      const response = await fetch("/api/counters");
+      if (!response.ok) {
+        throw new Error("Failed to fetch next sequence number");
+      }
+      const data = await response.json();
+      return data.nextSequence; 
+    } catch (error) {
+      console.error("Error fetching next sequence:", error);
+      throw error;
+    }
+  };
+
   const handleOrderPost = async () => {
+    const code = await getNextCounter();
+
     const newOrderData = {
-      code: 100,
+      code: code,
       status: 1,
       total: cartSum,
       cart: transformedCart,

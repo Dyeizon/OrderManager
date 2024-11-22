@@ -29,6 +29,10 @@ export function Header() {
           <Navbar.Link className="hover:cursor-pointer" onClick={() => (router.push('/caixa'))} disabled={parseInt(session?.privilegeLevel) < 2}><span className="px-8 py-2 bg-slate-200 rounded-lg">Caixa</span></Navbar.Link>
         )}
 
+        {session &&  parseInt(session?.privilegeLevel) >= 2 && (
+          <Navbar.Link className="hover:cursor-pointer" onClick={() => (router.push('/pedidos'))} disabled={parseInt(session?.privilegeLevel) < 2}><span className="px-8 py-2 bg-slate-200 rounded-lg">Pedidos</span></Navbar.Link>
+        )}
+
         {session &&  parseInt(session?.privilegeLevel) >= 1 && (
           <Navbar.Link className="hover:cursor-pointer" onClick={() => (router.push('/cozinha'))} disabled={parseInt(session?.privilegeLevel) < 1}><span className="px-8 py-2 bg-slate-200 rounded-lg">Cozinha</span></Navbar.Link>
         )}

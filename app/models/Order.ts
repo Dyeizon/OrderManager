@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import { OrderData } from "../types";
 import { CartItem } from "../types";
-import { ItemSchema } from "./Item";
-interface IOrderDataModel extends OrderData, mongoose.Document {}
+export interface IOrderDataModel extends OrderData, mongoose.Document {
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export const MinimizedItemSchema = new mongoose.Schema({
   name: {
@@ -45,7 +47,7 @@ const OrderSchema = new mongoose.Schema<IOrderDataModel>(
     },
     cart: {
       type: Map,
-      of: CartItemSchema, // Use a schema for each `CartItem`
+      of: CartItemSchema,
       required: [true, "Please provide the cart info for the order"],
     },
   },
