@@ -3,12 +3,11 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Items } from "../models/Item";
-import { Table, TextInput, Button, Alert } from "flowbite-react";
+import { Table, TextInput, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import OrderPrint from "../components/OrderPrint";
 import { Cart, OrderData } from "../types";
 import Image from "next/image";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 
 export default function Caixa() {
   const {data: session, status} = useSession();
