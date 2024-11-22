@@ -117,13 +117,21 @@ export default function Caixa() {
     setFilteredItems(filtered);
   }
 
-  const handleQuantityChange = (itemId: string, action: "increment" | "decrement") => {
-    setQuantities((prev) => {
-      const newQuantity = action === "increment" 
-        ? (prev[itemId] || 0) + 1
-        : Math.max((prev[itemId] || 0) - 1, 0);
-      return { ...prev, [itemId]: newQuantity };
-    });
+  const handleQuantityChange = (itemId: string, action: "increment" | "decrement" | number) => {
+    if(typeof action == "number") {
+      setQuantities(prev => ({
+        ...prev,
+        [itemId]: action || 0,
+      }));
+    } else {
+      setQuantities((prev) => {
+        const newQuantity = action === "increment" 
+          ? (prev[itemId] || 0) + 1
+          : Math.max((prev[itemId] || 0) - 1, 0);
+        return { ...prev, [itemId]: newQuantity };
+      });
+    }
+
   };
 
   const handleAdd = (itemId: string) => {
@@ -242,16 +250,15 @@ export default function Caixa() {
                 <Table.Cell className="whitespace-nowrap font-medium">{item.name}</Table.Cell>
                 <Table.Cell>R${item.price.toFixed(2)}</Table.Cell>
                 <Table.Cell>
-                  <div className="flex space-y-2 flex-col items-center">
+                  <form onSubmit={(e) => {e.preventDefault(); handleAdd(String(item._id))}} className="flex space-y-2 flex-col items-center">
                     <div className="flex space-x-2 items-center">
-                      <button onClick={() => handleQuantityChange(String(item._id), "decrement")} className="bg-red-500 w-10 h-10 rounded-md text-xl text-white">-</button>
-                      <TextInput style={{textAlign: 'center'}} className="flex items-center w-14" id={`quantity-${item._id}`} type="number" name="quantity" value={quantities[String(item._id)] || 0} readOnly required />
-                      <button onClick={() => handleQuantityChange(String(item._id), "increment")} className="bg-green-500 w-10 h-10 py-1 rounded-md text-xl text-white">+</button>
+                      <button type="button" onClick={() => handleQuantityChange(String(item._id), "decrement")} className="bg-red-500 w-10 h-10 rounded-md text-xl text-white">-</button>
+                      <TextInput style={{textAlign: 'center'}} className="flex items-center w-14" id={`quantity-${item._id}`} type="number" onChange={(e) => handleQuantityChange(String(item._id), parseInt(e.currentTarget.value))}  onFocus={(e) => e.currentTarget.select()} name="quantity" value={quantities[String(item._id)] || 0} required />
+                      <button type="button" onClick={() => handleQuantityChange(String(item._id), "increment")} className="bg-green-500 w-10 h-10 py-1 rounded-md text-xl text-white">+</button>
                     </div>
 
-                    <button onClick={() => handleAdd(String(item._id))} className="bg-green-200 px-4 py-4 rounded-md font-medium text-green-600 hover:underline">Adicionar ao pedido</button>
-
-                  </div>
+                    <button type="submit" className="bg-green-200 px-4 py-4 rounded-md font-medium text-green-600 hover:underline">Adicionar ao pedido</button>
+                  </form>
                 </Table.Cell>
               </Table.Row>
             ))}
