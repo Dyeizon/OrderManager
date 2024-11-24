@@ -6,6 +6,7 @@ import { IOrderDataModel } from "../models/Order";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { statusToText } from "../lib/utils";
+import PaymentButtons from "../components/PaymentButtons";
 
 export default function Pedidos() {
   const [orders, setOrders] = useState<IOrderDataModel[]>([]);
@@ -74,6 +75,7 @@ export default function Pedidos() {
           <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
           <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Status</Table.HeadCell>
           <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Ações</Table.HeadCell>
+          <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Excluir</Table.HeadCell>
         </Table.Head>
 
         <Table.Body className="divide-y">
@@ -85,10 +87,19 @@ export default function Pedidos() {
             <Table.Cell>{statusToText(order.status)}</Table.Cell>
             <Table.Cell className="flex justify-center items-center h-full">
               <div className="flex space-x-6">
-                <button onClick={() => handleDelete(String(order._id))} className="bg-red-200 px-4 py-1 rounded-md font-medium text-red-600 hover:underline dark:text-cyan-500">
-                  Excluir
-                </button>
+                
+                {order.status === 1 && (
+              <div className="flex items-center">
+                <PaymentButtons orderData={{_id: String(order._id), total: order.total, code: order.code}}/>
               </div>
+                )}
+              </div>
+            </Table.Cell>
+
+            <Table.Cell>
+              <button onClick={() => handleDelete(String(order._id))} className="bg-red-200 px-4 py-1 rounded-md font-medium text-red-600 hover:underline dark:text-cyan-500 h-12">
+                Excluir
+              </button>
             </Table.Cell>
           </Table.Row>
         ))}

@@ -30,76 +30,92 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		break;
 		
 		case "POST":
-		try {
-			const form = new IncomingForm();
+			try {
+				const form = new IncomingForm();
 
-			form.parse(req, async (err, fields) => {
-				if (err) return res.status(500).json({ error: "Failed to parse form data" });
-				
-				const code = Array.isArray(fields.code) ? parseFloat(fields.code[0]) : parseFloat(fields.code || '0');
-				const status = Array.isArray(fields.status) ? parseFloat(fields.status[0]) : parseFloat(fields.status || '0');
-				const total = Array.isArray(fields.total) ? parseFloat(fields.total[0]) : parseFloat(fields.total || '0');
-				const cart = Array.isArray(fields.cart) ? fields.cart[0] : fields.cart;
+				form.parse(req, async (err, fields) => {
+					if (err) return res.status(500).json({ error: "Failed to parse form data" });
+					
+					const code = Array.isArray(fields.code) ? parseFloat(fields.code[0]) : parseFloat(fields.code || '0');
+					const status = Array.isArray(fields.status) ? parseFloat(fields.status[0]) : parseFloat(fields.status || '0');
+					const total = Array.isArray(fields.total) ? parseFloat(fields.total[0]) : parseFloat(fields.total || '0');
+					const cart = Array.isArray(fields.cart) ? fields.cart[0] : fields.cart;
 
-				const newOrder = await Order.create({
-					code,
-					status,
-					total,
-					cart,
-				});
+					const newOrder = await Order.create({
+						code,
+						status,
+						total,
+						cart,
+					});
 
-				res.status(201).json({ data: newOrder });
-			})
-		} catch (error) {
-			res.status(400).json({ error: error});
-		}
-		break;
+					res.status(201).json({ data: newOrder });
+				})
+			} catch (error) {
+				res.status(400).json({ error: error});
+			}
+			break;
 		
 		case "PUT":
-		if(!session) {
-			return res.status(401).json({ error: "Unauthorized request"});
-		}
-		if (parseInt(session.privilegeLevel) < 3) {
-			return res.status(403).json({ error: "Insufficient privilege level" });
-		}
-		
-		try {
-			const { id } = req.query;
-			const updatedOrder = await Order.findByIdAndUpdate(id, req.body, {
-				new: true,
-				runValidators: true,
-			});
-			if (!updatedOrder) {
-				return res.status(404).json({ error: "Order not found" });
+			if(!session) {
+				return res.status(401).json({ error: "Unauthorized request"});
 			}
-			res.status(200).json({ data: updatedOrder });
-		} catch (error) {
-			res.status(400).json({ error: error });
-		}
-		break;
+			if (parseInt(session.privilegeLevel) < 3) {
+				return res.status(403).json({ error: "Insufficient privilege level" });
+			}
+			
+			try {
+				const { id } = req.query;
+				
+				
+				const form = new IncomingForm();
+				
+				form.parse(req, async (err, fields) => {
+					if (err) return res.status(500).json({ error: "Failed to parse form data" });
+					
+					// console.log(id);
+					// console.log(fields);
+					// console.log('estou no put')
+
+					const paymentInfo = Array.isArray(fields.paymentInfo) ? fields.paymentInfo[0] : fields.paymentInfo;
+					
+					console.log(paymentInfo)
+					
+					const updatedOrder = await Order.findByIdAndUpdate(id, { $set: {paymentInfo} }, {
+						new: true,
+						runValidators: true,
+					}).then(console.log).catch((() => res.status(404).json({ error: "Order not found" })));
+					
+					res.status(200).json({ data: updatedOrder });
+				})
+
+				
+			} catch (error) {
+				res.status(400).json({ error: error });
+			}
+			break;
 		
 		case "DELETE":
-		if(!session) {
-			return res.status(401).json({ error: "Unauthorized request"});
-		}
-		if (parseInt(session?.privilegeLevel) < 3) {
-			return res.status(403).json({ error: "Insufficient privilege level" });
-		}
-		try {
-			const { id } = req.query;
-			const deletedOrder = await Order.findByIdAndDelete(id);
-			if (!deletedOrder) {
-				return res.status(404).json({ error: "Order not found" });
+			if(!session) {
+				return res.status(401).json({ error: "Unauthorized request"});
 			}
-			res.status(200).json({ message: "Order deleted successfully", data: deletedOrder });
-		} catch (error) {
-			res.status(400).json({ error: error });
-		}
-		break;
+			if (parseInt(session?.privilegeLevel) < 3) {
+				return res.status(403).json({ error: "Insufficient privilege level" });
+			}
+			try {
+				const { id } = req.query;
+				const deletedOrder = await Order.findByIdAndDelete(id);
+				if (!deletedOrder) {
+					return res.status(404).json({ error: "Order not found" });
+				}
+				res.status(200).json({ message: "Order deleted successfully", data: deletedOrder });
+			} catch (error) {
+				res.status(400).json({ error: error });
+			}
+			break;
 		
 		default:
-		res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
-		res.status(405).json({ error: `Method ${method} not allowed` });
-		break;
+			res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
+			res.status(405).json({ error: `Method ${method} not allowed` });
+			break;
 	}
 }

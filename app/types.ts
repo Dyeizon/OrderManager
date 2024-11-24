@@ -22,4 +22,10 @@ export interface OrderData {
     total: number;
 
     cart: Cart;
+
+    paymentInfo?: {
+        mode: "pix" | "cash",
+        mercadoPagoId?: string,
+        qrCode?: string
+    };
 }

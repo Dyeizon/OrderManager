@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { OrderData } from "../types";
 import { CartItem } from "../types";
+
 export interface IOrderDataModel extends OrderData, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
@@ -49,6 +50,21 @@ const OrderSchema = new mongoose.Schema<IOrderDataModel>(
       type: Map,
       of: CartItemSchema,
       required: [true, "Please provide the cart info for the order"],
+    },
+
+    paymentInfo: {
+      type: {
+        mode: {
+          type: String,
+          required: true,
+        },
+        mercadoPagoId: {
+          mode: String,
+        },
+        qrCode: {
+          mode: String,
+        },
+      },
     },
   },
   { timestamps: true }
