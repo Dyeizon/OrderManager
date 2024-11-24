@@ -21,7 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(401).json({ error: "Unauthorized request"});
 		}
 		try {
-			const orders = await Order.find({}).select("-__v").sort({code: -1});
+			var orders;
+			if(req.query.status) {
+				const {status} = req.query;
+
+				const statusArray = status ? String(status).split(',').map(Number) : [];
+				orders = await Order.find({status: {$in: statusArray}}).select("-__v").sort({code: 1});
+			} else {
+				orders = await Order.find({}).select("-__v").sort({code: -1});
+			}
 			
 			res.status(200).json({ data: orders });
 		} catch (error) {

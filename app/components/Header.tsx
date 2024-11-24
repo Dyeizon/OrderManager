@@ -10,7 +10,7 @@ export function Header() {
   const {data: session} = useSession();
   const router = useRouter();
   return (
-    <Navbar fluid rounded className="w-11/12 m-auto">
+    <Navbar fluid rounded className="w-11/12 m-auto mb-4">
       <Navbar.Brand href="#">
         <Image src="/favicon.ico" width={32} height={32} className="w-8 h-8 mr-3 sm:h-9" alt="OrderManager Logo" />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">OrderManager</span>

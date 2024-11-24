@@ -3,7 +3,7 @@ export const statusToText = (status: number) => {
         case 1:
             return "A pagar"
         case 2:
-            return "Pago"
+            return "Na fila"
         case 3:
             return "Em produção"
         case 4:

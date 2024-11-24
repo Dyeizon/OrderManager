@@ -38,7 +38,7 @@ const OrderSchema = new mongoose.Schema<IOrderDataModel>(
     },
     status: {
       type: Number,
-      required: [true, "Please provide a number for the status (1 - To pay; 2 - Payed; 3 - To produce; 4 - Done; 5 - Closed)"],
+      required: [true, "Please provide a number for the status (1 - To pay; 2 - In queue; 3 - To produce; 4 - Done; 5 - Closed)"],
       default: 1,
       enum: [1, 2, 3, 4, 5],
     },

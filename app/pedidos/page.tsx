@@ -1,6 +1,6 @@
 "use client";
 
-import { Table } from "flowbite-react";
+import { Table, Button } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { IOrderDataModel } from "../models/Order";
 import { useSession } from "next-auth/react";
@@ -63,6 +63,24 @@ export default function Pedidos() {
       console.error("Error deleting order:", error);
     }
   }
+
+  const changeOrderStatus = async (orderId: string, to: number) => {
+    try {
+        const response = await fetch(`/api/orders?id=${orderId}`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({status: to}),
+        });
+    
+        if (!response.ok) throw new Error("Couldn't change status ID.");
+        fetchOrders();
+      } catch (error) {
+        console.error("Error changing status ID:", error);
+    }
+};
   
   return (
     <div>
@@ -89,10 +107,17 @@ export default function Pedidos() {
               <div className="flex space-x-6">
                 
                 {order.status === 1 && (
-              <div className="flex items-center">
-                <PaymentButtons orderId={String(order._id)} orderData={order}/>
-              </div>
+                <div className="flex items-center">
+                  <PaymentButtons orderId={String(order._id)} orderData={order}/>
+                </div>
                 )}
+
+                {order.status === 5 && (
+                  <div className="flex items-center">
+                    <Button color="light" onClick={() => changeOrderStatus(String(order._id), 2)}>Voltar à fila</Button>
+                  </div>
+                )}
+
               </div>
             </Table.Cell>
 
