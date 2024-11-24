@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(401).json({ error: "Unauthorized request"});
 		}
 		try {
-			var orders;
+			let orders;
 			if(req.query.status) {
 				const {status} = req.query;
 

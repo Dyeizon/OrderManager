@@ -14,7 +14,7 @@ export default function Cozinha() {
 
     const [orders, setOrders] = useState<IOrderDataModel[]>([]);
 
-    const [draggedDiv, setDraggedDiv] = useState<HTMLDivElement>();
+    const [draggedDiv, setDraggedDiv] = useState<HTMLDivElement | null>(null);
 
     // eslint-disable-next-line
   useEffect(() => {
@@ -50,17 +50,17 @@ export default function Cozinha() {
     }
   };
 
-    const handleDragStart = (event: any) => {
+    const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
         console.log('Dragging started');
-        setDraggedDiv(event.target);
+        setDraggedDiv(event.target as HTMLDivElement);
     };
 
-    const handleDragOver = (event: any) => {
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         console.log('Dragging over drop zone');
     };
 
-    const handleDrop = (event:any, area: number) => {
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>, area: number) => {
         event.preventDefault();
 
         if(draggedDiv && draggedDiv.id.split('-')[0] != String(area)) {
