@@ -23,9 +23,7 @@ export interface OrderData {
 
     cart: Cart;
 
-    paymentInfo?: {
-        mode: "pix" | "cash",
-        mercadoPagoId?: string,
-        qrCode?: string
-    };
+    mercadoPagoId?: string;
+    qrCode64?: string;
+    qrCodeLink?: string;
 }

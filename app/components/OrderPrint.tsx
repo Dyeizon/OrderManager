@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { OrderData } from "../types";
+import Image from "next/image";
 
 interface OrderPrintProps {
     orderData: OrderData | undefined; 
@@ -21,6 +22,9 @@ export default function OrderPrint({orderData}: OrderPrintProps) {
         <h1>---------- OrderManager ----------</h1>
         <h2>Resumo do pedido nº {orderData?.code}</h2>
         <p>Total: R${orderData?.total.toFixed(2)}</p>
+
+        <Image src={`data:image/png;base64,${orderData?.qrCode64}`} width={16} height={16} className="w-1/2 m-auto" alt="Pix QR-Code"/>
+
         <table style={{ width: '60%', borderCollapse: 'collapse', margin: '20px auto' }}>
         <thead>
             <tr>

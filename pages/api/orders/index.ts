@@ -66,28 +66,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			try {
 				const { id } = req.query;
 				
-				
 				const form = new IncomingForm();
 				
 				form.parse(req, async (err, fields) => {
 					if (err) return res.status(500).json({ error: "Failed to parse form data" });
-					
-					// console.log(id);
-					console.log(fields);
-					// console.log('estou no put')
 
-					const paymentInfo = Array.isArray(fields.paymentInfo) ? fields.paymentInfo[0] : fields.paymentInfo;
-					
-					console.log(paymentInfo)
-					
 					const updatedOrder = await Order.findByIdAndUpdate(id, { $set: fields }, {
 						new: true,
-						runValidators: true,
+						runValidators: false,
 					}).then().catch((() => res.status(404).json({ error: "Order not found" })));
-					
-					res.status(200).json({ data: updatedOrder });
-				})
 
+					res.status(200).json( updatedOrder );	
+				})
 				
 			} catch (error) {
 				res.status(400).json({ error: error });

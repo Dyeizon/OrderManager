@@ -52,22 +52,11 @@ const OrderSchema = new mongoose.Schema<IOrderDataModel>(
       required: [true, "Please provide the cart info for the order"],
     },
 
-    paymentInfo: {
-      type: {
-        mode: {
-          type: String,
-          required: true,
-        },
-        mercadoPagoId: {
-          mode: String,
-        },
-        qrCode: {
-          mode: String,
-        },
-      },
-    },
+    mercadoPagoId: {type: String},
+    qrCode64: {type: String},
+    qrCodeLink: {type: String}
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 export default mongoose.models.Order || mongoose.model<IOrderDataModel>("Order", OrderSchema);

@@ -90,7 +90,7 @@ export default function Pedidos() {
                 
                 {order.status === 1 && (
               <div className="flex items-center">
-                <PaymentButtons orderData={{_id: String(order._id), total: order.total, code: order.code}}/>
+                <PaymentButtons orderId={String(order._id)} orderData={order}/>
               </div>
                 )}
               </div>
