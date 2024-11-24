@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Modal, Spinner } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import Image from "next/image";
 import { OrderData } from "../types";
