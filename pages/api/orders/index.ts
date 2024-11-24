@@ -17,16 +17,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	
 	switch (method) {
 		case "GET":
-		if(!session) {
-			return res.status(401).json({ error: "Unauthorized request"});
-		}
+
 		try {
 			let orders;
+
 			if(req.query.status) {
 				const {status} = req.query;
-
 				const statusArray = status ? String(status).split(',').map(Number) : [];
-				orders = await Order.find({status: {$in: statusArray}}).select("-__v").sort({code: 1});
+
+				if(req.query.telao) {
+					orders = await Order.find({status: {$in: statusArray}}).select("code").sort({updatedAt: -1});
+				} else {
+					orders = await Order.find({status: {$in: statusArray}}).select("-__v").sort({updatedAt: -1});
+				}
+
 			} else {
 				orders = await Order.find({}).select("-__v").sort({code: -1});
 			}
@@ -103,13 +107,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			try {
 				const { id } = req.query;
 				
-				// Find the order by ID
 				const orderData = await Order.findById(id);
 				if (!orderData) {
 				return res.status(404).json({ error: "Order not found" });
 				}
-			
-				// Cancel the PIX payment
+
 				const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
 				const responsePixCancel = await fetch(`${baseUrl}/api/pix?id=${orderData.mercadoPagoId}`, {
@@ -123,14 +125,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				if (!responsePixCancel.ok) {
 				throw new Error("Couldn't cancel PIX.");
 				}
-			
-				// Delete the order
+
 				const deletedOrder = await Order.findByIdAndDelete(id);
 				if (!deletedOrder) {
 				return res.status(404).json({ error: "Order not found during deletion" });
 				}
-			
-				// Send response indicating successful deletion
+
 				res.status(200).json({ message: "Order deleted successfully", data: deletedOrder });
 			
 			} catch (error) {
