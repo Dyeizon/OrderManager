@@ -24,15 +24,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             );
             break;
-        case "PUT": {
+
+        case "DELETE": {
             payment.cancel({
                 id: String(req.query.id)
-            }).then(() => res.status(200).json({cancelledId: req.query.id})).catch(console.error);
+            }).then(() => res.status(200).json({cancelledId: req.query.id})).catch((err) => {res.status(400).json({error: err})});
         }
-    }
-
-
-
-
-    
+    } 
 }

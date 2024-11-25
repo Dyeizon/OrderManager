@@ -17,14 +17,14 @@ export default function PaymentButtons({orderData, orderId}: PaymentButtonsProps
     const markAsPaid = async () => {
         try {
             const responsePixCancel = await fetch(`/api/pix?id=${orderData.mercadoPagoId}`, {
-                method: "PUT",
+                method: "DELETE",
                 credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
-
-            if (!responsePixCancel.ok) throw new Error("Couldn't cancel PIX.");
+            
+            if (!responsePixCancel.ok) console.error("Couldn't cancel PIX.");
 
             const response = await fetch(`/api/orders?id=${orderId}`, {
                 method: "PUT",

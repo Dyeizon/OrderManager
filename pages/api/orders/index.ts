@@ -17,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	
 	switch (method) {
 		case "GET":
-
 		try {
 			let orders;
 
@@ -71,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			if(!session) {
 				return res.status(401).json({ error: "Unauthorized request"});
 			}
-			if (parseInt(session.privilegeLevel) < 3) {
+			if (parseInt(session.privilegeLevel) < 1) {
 				return res.status(403).json({ error: "Insufficient privilege level" });
 			}
 			
@@ -108,31 +107,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				const { id } = req.query;
 				
 				const orderData = await Order.findById(id);
+
 				if (!orderData) {
-				return res.status(404).json({ error: "Order not found" });
+					return res.status(404).json({ error: "Order not found" });
 				}
 
 				const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
-				const responsePixCancel = await fetch(`${baseUrl}/api/pix?id=${orderData.mercadoPagoId}`, {
-				method: "PUT",
-				credentials: "include",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				});
-			
-				if (!responsePixCancel.ok) {
-				throw new Error("Couldn't cancel PIX.");
-				}
+				try {
+					await fetch(`${baseUrl}/api/pix?id=${orderData.mercadoPagoId}`, {
+						method: "DELETE",
+						credentials: "include",
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					});
+				} catch (error) {
+					console.error(error);
+				} finally {
+					const deletedOrder = await Order.findByIdAndDelete(id);
 
-				const deletedOrder = await Order.findByIdAndDelete(id);
-				if (!deletedOrder) {
-				return res.status(404).json({ error: "Order not found during deletion" });
+					if (!deletedOrder) {
+						return res.status(404).json({ error: "Order not found during deletion" });
+					}
+	
+					res.status(200).json({ message: "Order deleted successfully", data: deletedOrder });
 				}
-
-				res.status(200).json({ message: "Order deleted successfully", data: deletedOrder });
-			
 			} catch (error) {
 				console.error("Error during DELETE operation:", error);
 				res.status(500).json({ error: error || "Internal Server Error" });

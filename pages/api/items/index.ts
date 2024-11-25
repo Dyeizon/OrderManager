@@ -21,6 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if(!session) {
         return res.status(401).json({ error: "Unauthorized request"});
       }
+
+      if (parseInt(session.privilegeLevel) < 1) {
+        return res.status(403).json({ error: "Insufficient privilege level" });
+      }
+
       try {
         const items = await Item.find({}).select("-__v");
 

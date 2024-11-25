@@ -92,6 +92,7 @@ export default function Caixa() {
     }
   
     setOrderData(newOrderData);
+    setCart({});
     
     if(!newOrderData) throw new Error("No data.");
 

@@ -31,6 +31,7 @@ export default function OrderPrint({orderData}: OrderPrintProps) {
             <th style={{ border: '1px solid black', padding: '4px' }}>Item</th>
             <th style={{ border: '1px solid black', padding: '4px' }}>Quantidade</th>
             <th style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>Valor Unitário</th>
+            <th style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -39,11 +40,12 @@ export default function OrderPrint({orderData}: OrderPrintProps) {
                 <td style={{ border: '1px solid black', padding: '4px' }}>{cartItem.item.name}</td>
                 <td style={{ border: '1px solid black', padding: '4px' }}>{cartItem.quantity}</td>
                 <td style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>R${cartItem.item.price.toFixed(2)}</td>
+                <td style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>R${(cartItem.quantity * cartItem.item.price).toFixed(2)}</td>
             </tr>
             ))
             }
             <tr className="bg-slate-300">
-                <td colSpan={2}style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>TOTAL</td>
+                <td colSpan={3} style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>TOTAL</td>
                 <td style={{ border: '1px solid black', padding: '4px', textAlign: 'right' }}>R${orderData?.total.toFixed(2)}</td>
             </tr>
         </tbody>
