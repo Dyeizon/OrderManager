@@ -22,7 +22,7 @@ Simply run the project using ``npm install`` to install all the dependencies, an
 
 ## Authentication
 
-To use the API, you will need to authenticate with [Next Auth Credentials](https://github.com/nextauthjs/next-auth) submitting the login form on the root page (``/``) with the already set ``user`` and ``password`` fields in the MongoDB's ``users`` collection. For testing, use the following credentials to login as an administrator:
+To use the API, you will need to authenticate with <a href="https://github.com/nextauthjs/next-auth" target="_blank">Next Auth Credentials</a> submitting the login form on the root page (``/``) with the already set ``user`` and ``password`` fields in the MongoDB's ``users`` collection. For testing, use the following credentials to login as an administrator:
 
 ```json
 {
@@ -41,7 +41,7 @@ You will then receive a **NextAuth Token** that will be kept stored on your cook
 
 <p style="display: inline-block; padding: 5px 10px; background-color: #4CAF50; color: white; text-align: center; text-decoration: none; font-size: 12px;">Minimum privilege = 3</p>
 
-Creates an user given a name, password and a privilege level. The password is automatically encrypted with [bcryptjs](https://github.com/dcodeIO/bcrypt.js) salt and hash.
+Creates an user given a name, password and a privilege level. The password is automatically encrypted with <a href="https://github.com/dcodeIO/bcrypt.js" target="_blank">bcryptjs</a> salt and hash.
 
 **Request Body Example**
 
@@ -288,7 +288,7 @@ Given an ``id`` query parameter, deletes and returns the deleted order as a resp
 
 <p style="display: inline-block; padding: 5px 10px; background-color: #4CAF50; color: white; text-align: center; text-decoration: none; font-size: 12px;">No privilege required</p>
 
-Creates a [MercadoPago](https://github.com/mercadopago/sdk-nodejs) Pix Payment based on the order information and returns a **PaymentResponse** object.
+Creates a <a href="https://github.com/mercadopago/sdk-nodejs" target="_blank">MercadoPago</a> Pix Payment based on the order information and returns a **PaymentResponse** object.
 
 **Request Body Example**
 
@@ -310,7 +310,7 @@ Given an ``id`` query parameter, cancels a pending payment and returns a **Payme
 ---
 
 ## Errors
-``401 Unauthorized``: Unauthorized request, check if your session is active.
+``401 Unauthorized``: Unauthorized request, check if your session is active.<br>
 ``403 Forbidden``: Insufficient privilege level.
 
 ## Contributors
