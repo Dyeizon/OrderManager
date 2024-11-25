@@ -56,7 +56,7 @@ Creates an user given a name, password and a privilege level. The password is au
 **Response Body Example**
 
  ```json
- data = {
+ "data" : {
     "name": "username",
     "password": "salted-and-hashed-password",
     "privilegeLevel": 2,
@@ -95,7 +95,7 @@ Retrieves a list of all the items.
 
  ```json
  {
-   "data" = [
+   "data" : [
     {
       "_id": "673a24bcd3b4a9b2ed294637",
       "name": "Hambúrguer",
@@ -142,7 +142,7 @@ Creates a new item, given the request body information.
 
  ```json
 {
-  "data" = {
+  "data": {
     "_id": "673a24bcd3b4a9b2ed294637",
     "name": "Hambúrguer",
     "category": "Lanche",
@@ -190,7 +190,7 @@ Retrieves a list of all the orders. This route can be called with some optional 
 
  ```json
 {
-  "data" = [
+  "data": [
     {
       "_id": "6743c2e4e8d9e36aa386ff33",
       "code": 47,
