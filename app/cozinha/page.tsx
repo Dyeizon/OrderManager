@@ -19,12 +19,12 @@ export default function Cozinha() {
     if (session) {
       fetchOrders();
       setInterval(() => {
-        fetchOrders();
+        fetchOrders()
       }, 60000);
-    } else if (status !== "loading") {
-      router.push("/");
+    } else if (status !== 'loading') {
+        router.push('/')
     }
-  }, [session]);
+  }, [session, router, status]);
 
   const fetchOrders = async () => {
     try {
@@ -215,7 +215,7 @@ export default function Cozinha() {
                   </span>
                 </div>
                 <button
-                  onClick={() => markAsRetrieved(order._id)}
+                  onClick={() => markAsRetrieved(order._id  as string)}
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
                   Retirado
