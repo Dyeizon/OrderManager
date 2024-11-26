@@ -20,7 +20,7 @@ export default function Cozinha() {
       fetchOrders();
       setInterval(() => {
         fetchOrders()
-      }, 60000);
+      }, 15000);
     } else if (status !== 'loading') {
         router.push('/')
     }
