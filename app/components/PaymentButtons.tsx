@@ -9,9 +9,10 @@ import Link from "next/link";
 interface PaymentButtonsProps {
     orderData: OrderData;
     orderId: string;
+    onAction?: () => void;
 }
 
-export default function PaymentButtons({orderData, orderId}: PaymentButtonsProps) {
+export default function PaymentButtons({orderData, orderId, onAction}: PaymentButtonsProps) {
     const [openModal, setOpenModal] = useState(false);
 
     const markAsPaid = async () => {
@@ -35,7 +36,9 @@ export default function PaymentButtons({orderData, orderId}: PaymentButtonsProps
                 body: JSON.stringify({status: 2}),
             });
         
-            if (!response.ok) throw new Error("Couldn't mark as paid.");           
+            if (!response.ok) throw new Error("Couldn't mark as paid.");
+            
+            onAction ? onAction() : null;
           } catch (error) {
             console.error("Error marking as paid:", error);
         }
@@ -61,11 +64,8 @@ export default function PaymentButtons({orderData, orderId}: PaymentButtonsProps
 
                 </div>
                 </Modal.Body>
-                <Modal.Footer className="justify-between">
-                    <Button color="success" onClick={() => {markAsPaid(); setOpenModal(false)}} className="inline-flex items-center mr-4">
-                        <span className="flex items-center">Marcar como pago</span>
-                    </Button>
-                    <Button onClick={() => setOpenModal(false)}>Fechar</Button>
+                <Modal.Footer>
+                    <Button className="w-full" onClick={() => setOpenModal(false)}>Fechar</Button>
                 </Modal.Footer>
             </Modal>
 
@@ -75,6 +75,10 @@ export default function PaymentButtons({orderData, orderId}: PaymentButtonsProps
                 </svg>
                 <span className="flex items-center">Pix</span>
             </Button>
+
+            <Button color="success" onClick={() => {markAsPaid(); setOpenModal(false)}} className="inline-flex items-center h-12">
+                    <span className="flex items-center">Marcar como pago</span>
+                </Button>
         </>
     )
 };

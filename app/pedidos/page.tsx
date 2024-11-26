@@ -108,7 +108,7 @@ export default function Pedidos() {
                 
                 {order.status === 1 && (
                 <div className="flex items-center">
-                  <PaymentButtons orderId={String(order._id)} orderData={order}/>
+                  <PaymentButtons onAction={fetchOrders} orderId={String(order._id)} orderData={order}/>
                 </div>
                 )}
 

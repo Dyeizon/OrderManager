@@ -28,6 +28,7 @@ export default function Caixa() {
   const [orderData, setOrderData] = useState<OrderData>();
   const [isQRReady, setIsQRReady] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState('');
+  const [showPopUp, setShowPopUp] = useState<boolean>(false);
 
   useEffect(() => {
     if(session) {
@@ -78,40 +79,40 @@ export default function Caixa() {
     setIsQRReady(false);
     if (cartSum == 0) return
     const code = await getNextCounter();
-
+    
     const newOrderData = {
       code: code,
       status: 1,
       total: cartSum,
       cart: transformedCart,
     };
-
+    
     if (!newOrderData.cart || newOrderData.cart.length === 0) {
       setError("Cart is empty!");
       return;
     }
-  
+    
     setOrderData(newOrderData);
     setCart({});
     
     if(!newOrderData) throw new Error("No data.");
-
+    
     try {
       fetch(`/api/orders`, {
         method: "POST",
         credentials: "include",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(newOrderData),
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to create order");
-            }
-            return response.json();
-        })
-        .then(data => {
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+      return response.json();
+    })
+    .then(data => {
             setCurrentOrderId(data.data._id);
             return attachPix(data.data);
         })
@@ -228,6 +229,7 @@ export default function Caixa() {
         }).then(async (res) => {
           setOrderData(await res.json())
           setIsQRReady(true);
+          setShowPopUp(true);
         }).catch(err => {
           if (err) throw new Error("Couldn't update the order to attach the pix.");
         });
@@ -266,14 +268,12 @@ export default function Caixa() {
             onChange={(e) => handleType(e.currentTarget.value)}
           />
         </div>
-  
-        {/* Payment Info */}
-        {orderData && sequence && (
-          <div className="flex items-center px-6 py-3 rounded-xl bg-green-100 border border-green-300 shadow-sm">
-            <span className="mr-4 text-green-600">
-              Pagamento do pedido <b>n°{sequence}</b>
-            </span>
-            <PaymentButtons orderId={currentOrderId} orderData={orderData} />
+
+
+        {showPopUp && orderData && sequence && (
+          <div className="flex items-center px-8 py-3 rounded-xl bg-green-300">
+            <span className="mr-4">Pagamento do pedido <b>n°{sequence}</b></span>
+            <PaymentButtons onAction={() => setShowPopUp(false)} orderId={currentOrderId} orderData={orderData}/>
           </div>
         )}
       </div>
