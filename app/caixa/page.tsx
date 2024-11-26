@@ -94,6 +94,8 @@ export default function Caixa() {
     
     setOrderData(newOrderData);
     setCart({});
+    setCartSum(0);
+    setQuantities({});
     
     if(!newOrderData) throw new Error("No data.");
     
