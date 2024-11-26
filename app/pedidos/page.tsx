@@ -88,7 +88,7 @@ export default function Pedidos() {
       <Table className="text-center">
 
         <Table.Head>
-          <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Data</Table.HeadCell>
+          <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Criado em</Table.HeadCell>
         <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Código</Table.HeadCell>
           <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
           <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Status</Table.HeadCell>
@@ -99,7 +99,7 @@ export default function Pedidos() {
         <Table.Body className="divide-y">
         {orders.map((order: IOrderDataModel) => (
           <Table.Row key={String(order._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell>{order.createdAt.getDate()}/{order.createdAt.getMonth() + 1}/{order.createdAt.getFullYear()}</Table.Cell>
+            <Table.Cell>{order.createdAt.toLocaleDateString('pt-BR')} {order.createdAt.toLocaleTimeString('pt-BR')}</Table.Cell>
             <Table.Cell className="whitespace-nowrap font-medium">{order.code}</Table.Cell>
             <Table.Cell>R${order.total.toFixed(2)}</Table.Cell>
             <Table.Cell>{statusToText(order.status)}</Table.Cell>
