@@ -239,80 +239,124 @@ export default function Caixa() {
   }
 
   return (
-    <div>
-      {error && <h1>{error}</h1>}
-      
-      {isQRReady && (
-        <OrderPrint orderData={orderData}/>
-      )}
-      
-      <div className="w-full flex my-4 justify-between h-20">
-        <div className="w-1/2 flex space-x-4 items-center justify-center">
-          <svg fill="#000000" height="24px" width="24px" version="1.1" id="search_icon" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" 
-              viewBox="0 0 490.4 490.4" xmlSpace="preserve">
+    <div className="bg-gray-50 min-h-screen p-6">
+      {error && <h1 className="text-red-500 text-center mb-4">{error}</h1>}
+  
+      {isQRReady && <OrderPrint orderData={orderData} />}
+  
+      <div className="flex flex-col lg:flex-row items-center justify-between mb-6 space-y-4 lg:space-y-0">
+        {/* Search Bar */}
+        <div className="flex items-center w-full lg:w-1/2 space-x-4 bg-white p-4 rounded-md shadow-sm border border-gray-300">
+          <svg
+            fill="#000000"
+            height="24px"
+            width="24px"
+            viewBox="0 0 490.4 490.4"
+            className="text-gray-500"
+          >
             <g>
-              <path d="M484.1,454.796l-110.5-110.6c29.8-36.3,47.6-82.8,47.6-133.4c0-116.3-94.3-210.6-210.6-210.6S0,94.496,0,210.796
-                s94.3,210.6,210.6,210.6c50.8,0,97.4-18,133.8-48l110.5,110.5c12.9,11.8,25,4.2,29.2,0C492.5,475.596,492.5,463.096,484.1,454.796z
-                M41.1,210.796c0-93.6,75.9-169.5,169.5-169.5s169.6,75.9,169.6,169.5s-75.9,169.5-169.5,169.5S41.1,304.396,41.1,210.796z"/>
+              <path d="M484.1,454.796l-110.5-110.6c29.8-36.3,47.6-82.8,47.6-133.4c0-116.3-94.3-210.6-210.6-210.6S0,94.496,0,210.796 s94.3,210.6,210.6,210.6c50.8,0,97.4-18,133.8-48l110.5,110.5c12.9,11.8,25,4.2,29.2,0C492.5,475.596,492.5,463.096,484.1,454.796z M41.1,210.796c0-93.6,75.9-169.5,169.5-169.5s169.6,75.9,169.6,169.5s-75.9,169.5-169.5,169.5S41.1,304.396,41.1,210.796z" />
             </g>
           </svg>
-
-          <TextInput className="w-9/12" style={{borderColor: '#AAA'}} type="text" value={searchText} onChange={(e) => handleType(e.currentTarget.value)}/>
+          <TextInput
+            className="w-full"
+            placeholder="Buscar itens..."
+            type="text"
+            value={searchText}
+            onChange={(e) => handleType(e.currentTarget.value)}
+          />
         </div>
-
-
+  
+        {/* Payment Info */}
         {orderData && sequence && (
-          <div className="flex items-center px-8 rounded-xl bg-green-300">
-            <span className="mr-4">Pagamento do pedido <b>n°{sequence}</b></span>
-            <PaymentButtons orderId={currentOrderId} orderData={orderData}/>
+          <div className="flex items-center px-6 py-3 rounded-xl bg-green-100 border border-green-300 shadow-sm">
+            <span className="mr-4 text-green-600">
+              Pagamento do pedido <b>n°{sequence}</b>
+            </span>
+            <PaymentButtons orderId={currentOrderId} orderData={orderData} />
           </div>
         )}
-
       </div>
-
-      <div className="flex space-x-4">
-        <div className="overflow-x-auto w-1/2 border-gray-300 border-2 rounded-lg">
+  
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Items Table */}
+        <div className="overflow-x-auto w-full lg:w-1/2 bg-white shadow-md rounded-lg border border-gray-300">
           <Table className="text-center">
-
             <Table.Head>
-            <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Imagem</Table.HeadCell>
+              <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Imagem</Table.HeadCell>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Item</Table.HeadCell>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Quantidade</Table.HeadCell>
             </Table.Head>
-
             <Table.Body className="divide-y">
-              {filteredItems.filter((item: Items) => !(String(item._id) in cart)).map((item: Items) => (
-              <Table.Row key={String(item._id)} className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
-                <Table.Cell>
-                {item.image ? (
-                  <Image src={`data:image/png;base64,${item.image}`} width={1} height={1} alt={item.name} className="w-20 h-20 object-cover rounded-md m-auto" />
-                ) : (
-                  <></>
-                )}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium">{item.name}</Table.Cell>
-                <Table.Cell>R${item.price.toFixed(2)}</Table.Cell>
-                <Table.Cell>
-                  <form onSubmit={(e) => {e.preventDefault(); handleAdd(String(item._id))}} className="flex space-y-2 flex-col items-center">
-                    <div className="flex space-x-2 items-center">
-                      <button type="button" onClick={() => handleQuantityChange(String(item._id), "decrement")} className="bg-red-500 w-10 h-10 rounded-md text-xl text-white">-</button>
-                      <TextInput style={{textAlign: 'center'}} className="flex items-center w-14" id={`quantity-${item._id}`} type="number" onChange={(e) => handleQuantityChange(String(item._id), parseInt(e.currentTarget.value))}  onFocus={(e) => e.currentTarget.select()} name="quantity" value={quantities[String(item._id)] || 0} required />
-                      <button type="button" onClick={() => handleQuantityChange(String(item._id), "increment")} className="bg-green-500 w-10 h-10 py-1 rounded-md text-xl text-white">+</button>
-                    </div>
-
-                    <button type="submit" className="bg-green-200 px-4 py-4 rounded-md font-medium text-green-600 hover:underline">Adicionar ao pedido</button>
-                  </form>
-                </Table.Cell>
-              </Table.Row>
-            ))}
+              {filteredItems
+                .filter((item: Items) => !(String(item._id) in cart))
+                .map((item: Items) => (
+                  <Table.Row key={String(item._id)} className="bg-white hover:bg-gray-50">
+                    <Table.Cell>
+                      {item.image ? (
+                        <Image
+                          src={`data:image/png;base64,${item.image}`}
+                          width={1}
+                          height={1}
+                          alt={item.name}
+                          className="w-20 h-20 object-cover rounded-md mx-auto"
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell className="font-medium">{item.name}</Table.Cell>
+                    <Table.Cell>R${item.price.toFixed(2)}</Table.Cell>
+                    <Table.Cell>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleAdd(String(item._id));
+                        }}
+                        className="flex flex-col items-center"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(String(item._id), "decrement")}
+                            className="bg-red-500 w-10 h-10 rounded-md text-xl text-white hover:bg-red-600"
+                          >
+                            -
+                          </button>
+                          <TextInput
+                            style={{ textAlign: "center" }}
+                            className="w-14 text-center"
+                            type="number"
+                            onChange={(e) => handleQuantityChange(String(item._id), parseInt(e.currentTarget.value))}
+                            value={quantities[String(item._id)] || 0}
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(String(item._id), "increment")}
+                            className="bg-green-500 w-10 h-10 rounded-md text-xl text-white hover:bg-green-600"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <button
+                          type="submit"
+                          className="bg-green-200 mt-2 px-4 py-2 rounded-md text-green-600 hover:underline"
+                        >
+                          Adicionar ao pedido
+                        </button>
+                      </form>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
             </Table.Body>
           </Table>
         </div>
-
-        <div className="overflow-x-auto w-1/2  border-gray-300 border-2 rounded-lg">
+  
+        {/* Cart Table */}
+        <div className="overflow-x-auto w-full lg:w-1/2 bg-white shadow-md rounded-lg border border-gray-300">
           <Table className="text-center">
-
             <Table.Head>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Item</Table.HeadCell>
               <Table.HeadCell style={{backgroundColor: 'var(--theme-color)', color: 'white'}}>Valor</Table.HeadCell>
@@ -321,33 +365,34 @@ export default function Caixa() {
                 <Button onClick={() => {handleOrderPost()}} className="bg-green-500 text-white" color="success">Finalizar pedido</Button>
               </Table.HeadCell>
             </Table.Head>
-
             <Table.Body className="divide-y">
-              {
-                Object.keys(cart).length === 0 ? (
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
-                    <Table.Cell className="whitespace-nowrap font-medium">O pedido está vazio.</Table.Cell>
+              {Object.keys(cart).length === 0 ? (
+                <Table.Row className="bg-white">
+                  <Table.Cell className="whitespace-nowrap font-medium">O pedido está vazio.</Table.Cell>
+                </Table.Row>
+              ) : (
+                Object.entries(cart).map(([itemId, cartItem]) => (
+                  <Table.Row key={String(itemId)} className="bg-white hover:bg-gray-50">
+                    <Table.Cell className="font-medium">{cartItem.item.name}</Table.Cell>
+                    <Table.Cell>
+                      {quantities[String(itemId)] || 0} x R${cartItem.item.price} = R$
+                      {(quantities[String(itemId)] || 0) * cartItem.item.price}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <button
+                        onClick={() => removeFromCart(String(itemId))}
+                        className="bg-red-200 px-4 py-1 rounded-md text-red-600 hover:underline"
+                      >
+                        Remover do pedido
+                      </button>
+                    </Table.Cell>
                   </Table.Row>
-                ) : (
-                  Object.entries(cart).map(([itemId, cartItem]) => (
-                    <Table.Row key={String(itemId)} className="bg-white dark:border-gray-700 dark:bg-gray-800 items-center">
-                      <Table.Cell className="whitespace-nowrap font-medium">{cartItem.item.name}</Table.Cell>
-                      <Table.Cell>{quantities[String(itemId)] || 0} x R${cartItem.item.price} = R$ {(quantities[String(itemId)] || 0) * cartItem.item.price}</Table.Cell>
-                      <Table.Cell className="flex justify-center items-center h-full">
-                          <button onClick={() => removeFromCart(String(itemId))} className="bg-red-200 px-4 py-1 rounded-md font-medium text-red-600 hover:underline dark:text-cyan-500">
-                            Remover do pedido
-                          </button>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                )
-              }            
+                ))
+              )}
             </Table.Body>
           </Table>
         </div>
       </div>
-      
     </div>
-  );
-  
+  );  
 }
