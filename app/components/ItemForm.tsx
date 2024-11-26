@@ -55,7 +55,7 @@ export function ItemForm({onSub}: ItemFormProps) {
         <form onSubmit={handleSubmit} className="flex flex-wrap gap-4">
         <div className="flex-1">
             <div className="mb-2">
-            <Label htmlFor="name" value='Nome do item' />
+            <Label htmlFor="name" value='Nome' />
             </div>
             <TextInput id="name" name="name" type="text" value={formData.name} onChange={handleChange} required shadow />
         </div>

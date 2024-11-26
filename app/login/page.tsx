@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -13,11 +13,11 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const {data: session, status} = useSession();
-  // eslint-disable-next-line
+  const { data: session, status } = useSession();
+
   useEffect(() => {
-    if(session) {
-      switch(parseInt(session.privilegeLevel)) {
+    if (session) {
+      switch (parseInt(session.privilegeLevel)) {
         case 3:
           router.push('/admin');
           break;
@@ -32,8 +32,7 @@ const SignIn = () => {
           break;
       }
     }
-    // eslint-disable-next-line
-  }, [status])
+  }, [session, status, router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,24 +51,79 @@ const SignIn = () => {
   };
 
   return (
-    <div className='w-full h-screen flex items-center justify-center' style={{backgroundColor: 'var(--theme-color)'}}>
-      <form onSubmit={handleSubmit} className="flex max-w-md w-4/5 flex-col gap-4 h-min bg-slate-100 p-10 rounded-lg">
-        <Image src="/favicon.svg" width={5} height={5} className="w-20 m-auto" alt="OrderManager Logo"/>
+    <div
+      className="w-full h-screen flex items-center justify-center"
+      style={{ backgroundColor: '#FFE0B1' }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="flex max-w-md w-4/5 flex-col gap-6 h-min bg-white p-10 rounded-xl shadow-md"
+        style={{
+          border: '2px solid #FF9800', // Borda laranja
+        }}
+      >
+        {/* Logo e Boas-Vindas */}
+        <div className="flex flex-col items-center justify-center mb-6">
+          <Image
+            src="/favicon.svg"
+            width={100} // Logo maior
+            height={100}
+            alt="Agiliza Aí Logo"
+            className="rounded-full border-4 border-orange-500"
+          />
+          <p className="text-orange-800 font-semibold text-lg mt-4">
+            Boas Vindas ao <span className="font-bold">Agiliza Aí!</span>
+          </p>
+        </div>
+
+        {/* Campos de Texto */}
         <div>
-          <div className="mb-2 block">
-            <Label htmlFor="username" value="Usuário" />
+          <div className="mb-2">
+            <Label
+              htmlFor="username"
+              value="Usuário"
+              className="text-orange-800 font-semibold"
+            />
           </div>
-          <TextInput style={{ borderColor: '#AAA' }} id="username" type="text" required value={username} onChange={(e) => setUsername(e.currentTarget.value)}/>
+          <TextInput
+            id="username"
+            type="text"
+            required
+            value={username}
+            onChange={(e) => setUsername(e.currentTarget.value)}
+            className="focus:ring-orange-500 focus:border-orange-500"
+          />
         </div>
         <div>
-          <div className="mb-2 block">
-            <Label htmlFor="password" value="Senha" />
+          <div className="mb-2">
+            <Label
+              htmlFor="password"
+              value="Senha"
+              className="text-orange-800 font-semibold"
+            />
           </div>
-          <TextInput style={{borderColor: '#AAA'}} id="password" type="password" required value={password} onChange={(e) => setPassword(e.currentTarget.value)}/>
+          <TextInput
+            id="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.currentTarget.value)}
+            className="focus:ring-orange-500 focus:border-orange-500"
+          />
         </div>
-      <p className='min-h-6 text-red-600'>{error}</p>
-      <Button type="submit" disabled={status == 'loading'}>Entrar</Button>
-    </form>
+
+        {/* Mensagem de Erro */}
+        <p className="text-sm text-red-600 text-center min-h-6">{error}</p>
+
+        {/* Botão de Enviar */}
+        <Button
+          type="submit"
+          disabled={status === 'loading'}
+          className="bg-orange-500 text-white font-bold py-2 px-4 rounded"
+        >
+          Entrar
+        </Button>
+      </form>
     </div>
   );
 };

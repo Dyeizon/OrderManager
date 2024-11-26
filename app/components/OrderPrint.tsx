@@ -19,7 +19,7 @@ export default function OrderPrint({orderData}: OrderPrintProps) {
 
     return (
     <div className="print-content" ref={printRef} style={{ padding: '40px', fontFamily: 'Arial, sans-serif', textAlign: 'center'}}>
-        <h1>---------- OrderManager ----------</h1>
+        <h1>---------- Agiliza Aí ----------</h1>
         <h2>Resumo do pedido nº {orderData?.code}</h2>
         <p>Total: R${orderData?.total.toFixed(2)}</p>
 

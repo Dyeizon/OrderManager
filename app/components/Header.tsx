@@ -12,8 +12,8 @@ export function Header() {
   return (
     <Navbar fluid rounded className="w-11/12 m-auto mb-4">
       <Navbar.Brand href="#">
-        <Image src="/favicon.ico" width={32} height={32} className="w-8 h-8 mr-3 sm:h-9" alt="OrderManager Logo" />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">OrderManager</span>
+        <Image src="/favicon.ico" width={32} height={32} className="w-8 h-8 mr-3 sm:h-9" alt="Agiliza Aí Logo" />
+        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Agiliza Aí</span>
       </Navbar.Brand>
       <div className="flex md:order-2 items-center space-x-6">
         <span className="text-gray-500 text-md">{session?.username}</span>
