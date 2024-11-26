@@ -130,6 +130,7 @@ export default function Cozinha() {
                               <div className="border-2 rounded-md border-blue-400 w-8 h-8 flex items-center justify-center p-2">
                                 {cartItem.quantity}
                               </div>
+                              <p>{cartItem.item.name}</p>
                             </div>
                           </li>
                         )
