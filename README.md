@@ -83,7 +83,7 @@ Retrieves the next number of a counter stored on the database, each time this ro
 
 ---
 
-### Items
+### Items 
 
 ```GET /api/items```
 
