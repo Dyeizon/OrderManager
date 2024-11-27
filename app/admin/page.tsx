@@ -92,7 +92,7 @@ export default function Admin() {
       )}
 
       {/* Formulário */}
-      <div className="w-11/12 lg:w-9/12 m-auto my-8 p-6 bg-white rounded-lg shadow-md border border-gray-300">
+      <div className="w-11/12 lg:w-9/12 m-auto mb-4 p-6 bg-white rounded-lg shadow-md border border-gray-300">
         <h1 className="text-2xl font-semibold text-orange-600 mb-4 text-center">
           Adicionar Novo Item
         </h1>

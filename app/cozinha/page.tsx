@@ -83,7 +83,7 @@ export default function Cozinha() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: 5 }), // Status '5' for "Retrieved".
+        body: JSON.stringify({ status: 5 }),
       });
 
       if (!response.ok) throw new Error("Couldn't mark as retrieved.");
@@ -100,6 +100,7 @@ export default function Cozinha() {
         onDragOver={handleDragOver}
         onDrop={(event) => handleDrop(event, 2)}
         className="w-full p-8 bg-yellow-200 rounded-2xl overflow-y-auto"
+        style={{height: `calc(90vh)`}}
       >
         <h2 className="text-2xl font-bold text-center mb-4">{statusToText(2)}</h2>
 
@@ -148,6 +149,7 @@ export default function Cozinha() {
         onDragOver={handleDragOver}
         onDrop={(event) => handleDrop(event, 3)}
         className="w-full p-8 bg-orange-300 rounded-2xl overflow-y-auto"
+        style={{height: `calc(90vh)`}}
       >
         <h2 className="text-2xl font-bold text-center mb-4">{statusToText(3)}</h2>
 
@@ -196,6 +198,7 @@ export default function Cozinha() {
         onDragOver={handleDragOver}
         onDrop={(event) => handleDrop(event, 4)}
         className="w-full p-8 bg-green-300 rounded-2xl overflow-y-auto"
+        style={{height: `calc(90vh)`}}
       >
         <h2 className="text-2xl font-bold text-center mb-4">{statusToText(4)}</h2>
 

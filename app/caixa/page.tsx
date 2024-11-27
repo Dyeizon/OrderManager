@@ -243,7 +243,7 @@ export default function Caixa() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6">
+    <div className="bg-gray-50 min-h-screen">
       {error && <h1 className="text-red-500 text-center mb-4">{error}</h1>}
   
       {isQRReady && <OrderPrint orderData={orderData} />}
