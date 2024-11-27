@@ -1,7 +1,6 @@
 
 "use client";
 
-import { Button, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -24,7 +23,7 @@ export function Header() {
   return (
     <nav className="bg-white dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600 mb-4">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="#"   className="flex items-center space-x-3 rtl:space-x-reverse">
+      <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image src="/favicon.ico" width={32} height={32} className="mr-3 sm:h-9" alt="Agiliza Aí Logo"/>
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Agiliza Aí</span>
       </a>

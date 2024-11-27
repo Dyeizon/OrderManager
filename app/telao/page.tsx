@@ -57,7 +57,8 @@ export default function Telao() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
+  
+// eslint-disable-next-line
   useEffect(() => {
     if (!mounted) return;
 
@@ -65,6 +66,7 @@ export default function Telao() {
     const fetchInterval = setInterval(fetchOrders, 5000);
 
     return () => clearInterval(fetchInterval);
+    // eslint-disable-next-line
   }, [mounted, orders]);
 
   useEffect(() => {
