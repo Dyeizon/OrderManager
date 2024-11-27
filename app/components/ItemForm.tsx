@@ -76,7 +76,7 @@ export function ItemForm({onSub}: ItemFormProps) {
             <TextInput id="price" type="number" name="price" step={0.010} value={formData.price} onChange={handleChange} required shadow />
         </div>
 
-        <div>
+        <div className="flex-1">
             <div className="mb-2">
                 <Label htmlFor="image" value="Imagem"/>
             </div>
